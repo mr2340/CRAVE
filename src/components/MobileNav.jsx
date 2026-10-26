@@ -33,14 +33,14 @@ export default function MobileNav() {
           <House size={22} strokeWidth={1.8} aria-hidden="true" />
         </Link>
 
-        {/* Menu */}
-        <a
-          href="/#popular"
-          aria-label="Menu"
+        {/* Menu & Dashboard */}
+        <Link
+          to="/dashboard"
+          aria-label="Ordering Dashboard"
           className="w-12 h-12 rounded-full flex items-center justify-center transition-all cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white text-[#A3A3A3] hover:text-white"
         >
           <UtensilsCrossed size={22} strokeWidth={1.8} aria-hidden="true" />
-        </a>
+        </Link>
 
         {/* Cart */}
         <Link

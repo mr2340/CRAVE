@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight, Flame } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { gsap, useGSAP } from '../lib/gsap.js';
 import CulinaryPatternBg from './CulinaryPatternBg.jsx';
 
@@ -105,15 +106,15 @@ export default function LandingHero() {
 
             {/* Price & Actions Row */}
             <div className="pt-2 flex flex-wrap items-center gap-4">
-              <a
-                href="#popular"
+              <Link
+                to="/dashboard"
                 className="inline-flex items-center gap-2.5 h-12 md:h-14 px-8 rounded-full bg-[var(--color-ember)] hover:bg-[#e04b14] active:scale-95 text-white font-extrabold text-sm sm:text-base shadow-lg shadow-[rgba(255,90,31,0.25)] transition-all cursor-pointer select-none"
               >
                 <span>Order Now</span>
                 <span className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
                   <ArrowRight size={14} />
                 </span>
-              </a>
+              </Link>
 
               {/* Price Pill */}
               <div className="flex items-baseline gap-1.5 px-4 py-2 rounded-full bg-white border border-[#E8E6DF] shadow-2xs">

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { CartProvider } from './context/CartContext.jsx';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
@@ -7,6 +7,7 @@ import CartDrawer from './components/CartDrawer.jsx';
 import { ScrollToTop } from './components/ScrollToTop.jsx';
 
 import HomePage from './pages/HomePage.jsx';
+import DashboardPage from './pages/DashboardPage.jsx';
 import DishDetailPage from './pages/DishDetailPage.jsx';
 import CartPage from './pages/CartPage.jsx';
 import CheckoutPage from './pages/CheckoutPage.jsx';
@@ -15,6 +16,9 @@ import OrderTrackingPage from './pages/OrderTrackingPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 function AppLayout() {
+  const location = useLocation();
+  const isDashboard = location.pathname.startsWith('/dashboard');
+
   return (
     <div className="min-h-screen bg-[var(--color-canvas)] text-[var(--color-ink)] flex flex-col justify-between">
       <a
@@ -24,12 +28,15 @@ function AppLayout() {
         Skip to main content
       </a>
 
-      <Header />
+      {!isDashboard && <Header />}
 
       <div className="flex-1">
         <Routes>
           {/* Public Landing Page */}
           <Route path="/" element={<HomePage />} />
+
+          {/* Interactive Mobile Food Delivery Dashboard */}
+          <Route path="/dashboard" element={<DashboardPage />} />
 
           {/* Product Detail, Cart, and Checkout */}
           <Route path="/menu/:slug" element={<DishDetailPage />} />
@@ -41,8 +48,8 @@ function AppLayout() {
         </Routes>
       </div>
 
-      <Footer />
-      <MobileNav />
+      {!isDashboard && <Footer />}
+      {!isDashboard && <MobileNav />}
       <CartDrawer />
     </div>
   );

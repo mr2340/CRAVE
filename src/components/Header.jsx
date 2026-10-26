@@ -3,6 +3,7 @@ import {
   ShoppingBag,
   Search,
   Phone,
+  Sparkles,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/useCart.js';
@@ -144,7 +145,14 @@ export default function Header() {
                 <p className="font-bold text-[#111111] leading-tight">+234 803 123 4567</p>
               </div>
             </a>
-
+            {/* Ordering App Launch Button */}
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center gap-1.5 h-9 sm:h-10 px-3.5 rounded-full bg-[#111111] text-white hover:bg-[var(--color-ember)] hover:text-black font-extrabold text-xs transition-all shadow-xs cursor-pointer active:scale-95"
+            >
+              <Sparkles size={14} className="text-[#FFB72B]" />
+              <span className="hidden xs:inline">App View</span>
+            </Link>
 
             {/* Cart Trigger with Naira Total */}
             <button

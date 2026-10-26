@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation } from 'swiper/modules';
 import 'swiper/css/bundle';
@@ -93,13 +94,13 @@ export default function HottestCategories() {
           </div>
 
           <div className="flex items-center gap-3">
-            <a
-              href="#popular"
+            <Link
+              to="/dashboard"
               className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[var(--color-ember)] text-white text-xs font-bold hover:bg-[#e04b14] transition-colors"
             >
               <span>See All</span>
               <ArrowRight size={13} />
-            </a>
+            </Link>
 
             {/* Slider arrows controlling Swiper */}
             <div className="flex items-center gap-1.5">
@@ -146,8 +147,8 @@ export default function HottestCategories() {
         >
           {categoryCards.map((cat, idx) => (
             <SwiperSlide key={`${cat.id}-${idx}`}>
-              <a
-                href="#popular"
+              <Link
+                to="/dashboard"
                 className="w-full rounded-2xl p-4 flex flex-col items-center justify-center text-center transition-all duration-300 hover:shadow-md hover:-translate-y-1 active:scale-98 border border-black/5 group cursor-pointer block"
                 style={{ backgroundColor: cat.bg }}
               >
@@ -168,7 +169,7 @@ export default function HottestCategories() {
                 <span className="text-[11px] font-semibold text-neutral-500 mt-0.5 block">
                   {cat.count}
                 </span>
-              </a>
+              </Link>
             </SwiperSlide>
           ))}
         </Swiper>

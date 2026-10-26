@@ -1,4 +1,5 @@
 import { ArrowRight, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function PromoFeatureBanners() {
   const banners = [
@@ -64,13 +65,13 @@ export default function PromoFeatureBanners() {
 
               {/* Action Button */}
               <div className="relative z-10 pt-4">
-                <a
-                  href="#popular"
+                <Link
+                  to="/dashboard"
                   className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all shadow-xs active:scale-95 cursor-pointer ${b.btnClass}`}
                 >
                   <span>{b.btnText}</span>
                   <ArrowRight size={13} />
-                </a>
+                </Link>
               </div>
 
               {/* Floating Image Thumbnail with Smooth Rounded Frame */}
