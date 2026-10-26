@@ -1,0 +1,43 @@
+@theme {
+  --color-ink: #1A1A1A;
+  --color-canvas: #F6F5F2;
+  --color-surface: #FFFFFF;
+  --color-ember: #FF5A1F;
+  --color-ember-text: #C93A08;
+  --color-muted: #6B6B6B;
+  --color-border: #E8E6E1;
+  --color-panel: #141414;
+  --color-success: #1F9D55;
+
+  --color-ember-pressed: #E64A12;
+  --color-muted-on-dark: #A3A3A3;
+  --color-canvas-on-dark: #F6F5F2;
+  --color-overlay: rgba(20, 20, 20, 0.5);
+  --color-ink-hover: #2B2B2B;
+
+  --font-display: 'Bricolage Grotesque Variable', 'DM Sans Variable', system-ui, sans-serif;
+  --font-body: 'DM Sans Variable', system-ui, sans-serif;
+
+  --radius-card: 20px;
+  --radius-img: 14px;
+  --radius-control: 14px;
+  --radius-pill: 9999px;
+  --radius-panel: 28px;
+  --radius-sheet: 24px;
+
+  --shadow-card: 0 8px 24px rgba(20, 20, 20, 0.06);
+
+  --color-pasta-bg: #F9F8F3;
+  --color-pasta-card: #FFFFFF;
+  --color-pasta-dark: #0B0B0B;
+  --color-pasta-accent: #FFB72B;
+  --color-pasta-title: #111111;
+  --color-pasta-muted: #8E8E93;
+  --color-pasta-border: #D1D1D6;
+
+  --font-pasta: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}

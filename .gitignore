@@ -1,0 +1,56 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Node dependencies & builds
+node_modules
+dist
+dist-ssr
+*.local
+
+# Internal Documentation & Specifications (Confidential / Private)
+CRAVE-DOCS
+CRAVE-DOCS/
+REPORT.md
+
+# Environment and secrets (CRITICAL for public repos)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+*.pfx
+
+# Antigravity & Agent Scratch Folders
+scratch_video_frames
+scratch_video_frames/
+temp_images
+temp_images/
+.gemini
+.gemini/
+.agents
+.agents/
+brain
+brain/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS metadata
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
