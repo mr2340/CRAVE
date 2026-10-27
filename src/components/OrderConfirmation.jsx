@@ -140,32 +140,34 @@ export default function OrderConfirmation({ lastOrder, onBackToMenu }) {
       </div>
 
       {/* Action Buttons */}
-      <div className="pt-2 space-y-2">
-        <Link
-          to={`/track/${lastOrder.number}`}
-          onClick={onBackToMenu}
-          className="w-full h-12 rounded-[var(--radius-control)] bg-[var(--color-ember)] text-white font-semibold text-sm hover:bg-[#e04b14] transition-colors flex items-center justify-center gap-2 select-none"
-        >
-          <Compass size={17} />
-          <span>Track Simulated Delivery</span>
-        </Link>
-
-        <Link
-          to={`/order/${lastOrder.number}/receipt`}
-          onClick={onBackToMenu}
-          className="w-full h-11 rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-ink)] font-semibold text-sm hover:bg-[var(--color-canvas)] transition-colors flex items-center justify-center gap-2 select-none"
-        >
-          <Receipt size={16} />
-          <span>View Standalone Receipt</span>
-        </Link>
-
+      <div className="pt-2 space-y-2.5">
         <button
           type="button"
           onClick={onBackToMenu}
-          className="w-full h-11 rounded-[var(--radius-control)] bg-[var(--color-ink)] text-white font-semibold text-sm hover:bg-[var(--color-ink-hover)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ink)] cursor-pointer select-none"
+          className="w-full h-[52px] rounded-[var(--radius-control)] bg-[var(--color-ink)] hover:bg-[var(--color-ink-hover)] active:scale-[0.98] text-white font-[var(--font-body)] font-semibold text-base transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ink)] cursor-pointer select-none"
         >
           Back to menu
         </button>
+
+        <div className="flex items-center justify-center gap-3 pt-1 text-xs text-[var(--color-muted)]">
+          <Link
+            to={`/track/${lastOrder.number}`}
+            onClick={onBackToMenu}
+            className="hover:text-[var(--color-ink)] underline underline-offset-2 flex items-center gap-1"
+          >
+            <Compass size={13} />
+            <span>Track Delivery</span>
+          </Link>
+          <span>·</span>
+          <Link
+            to={`/order/${lastOrder.number}/receipt`}
+            onClick={onBackToMenu}
+            className="hover:text-[var(--color-ink)] underline underline-offset-2 flex items-center gap-1"
+          >
+            <Receipt size={13} />
+            <span>View Receipt</span>
+          </Link>
+        </div>
       </div>
     </div>
   );

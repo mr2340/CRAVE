@@ -90,3 +90,25 @@ button:not(:disabled):active,
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
+
+/* Native Cart Drawer Dialog Styles */
+dialog#cart-drawer {
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  width: 100dvw;
+  height: 100vh;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  border: none;
+  background: transparent;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+dialog#cart-drawer::backdrop {
+  background: transparent;
+}
