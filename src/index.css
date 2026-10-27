@@ -112,3 +112,37 @@ dialog#cart-drawer {
 dialog#cart-drawer::backdrop {
   background: transparent;
 }
+
+/* Scrollbar Hiding Utilities (Zero Ruler / No Track) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* Dynamic Continuous Marquee for Categories */
+@keyframes categoryMarquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-category-marquee {
+  display: flex;
+  width: max-content;
+  animation: categoryMarquee 28s linear infinite;
+  will-change: transform;
+}
+
+.animate-category-marquee:hover,
+.animate-category-marquee:focus-within {
+  animation-play-state: paused;
+}

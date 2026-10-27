@@ -13,6 +13,9 @@ import {
   X,
   Check,
   Sparkles,
+  ChevronLeft,
+  ChevronRight,
+  Flame,
 } from 'lucide-react';
 import { PRODUCTS } from '../data/catalog.js';
 import { useCart } from '../context/useCart.js';
@@ -54,12 +57,105 @@ export default function DashboardPage() {
   const tabsContainerRef = useRef(null);
   const activeHighlightRef = useRef(null);
 
-  // Hero Dish (Artisan Spaghetti / Linguine)
-  const heroDish = useMemo(() => {
-    return PRODUCTS.find((p) => p.id === 'prawn-linguine') || PRODUCTS[2];
+  // 4 Modern Showcase Carousel Slides (Fulfilling the 4-card swipeable hero specification)
+  const heroSlides = useMemo(() => {
+    return [
+      {
+        id: 'prawn-linguine',
+        dish: PRODUCTS.find((p) => p.id === 'prawn-linguine') || PRODUCTS[2],
+        tag: 'Free Delivery',
+        tagIcon: Sparkles,
+        title: 'Free delivery for artisan spaghetti',
+        desc: 'Wild tiger prawns, 48-hr stone broth & fresh garden basil.',
+        accentColor: '#F5A623',
+        bgGlow: 'bg-[#F5A623]/25',
+        image: '/images/dish-prawn-linguine.webp',
+      },
+      {
+        id: 'jollof-chicken',
+        dish: PRODUCTS.find((p) => p.id === 'jollof-chicken') || PRODUCTS[1],
+        tag: 'Chef Choice · Lagos No.1',
+        tagIcon: Flame,
+        title: 'Smoky Party Jollof & Charcoal Thigh',
+        desc: 'Charred tomato reduction, suya spices & sweet golden dodo.',
+        accentColor: '#FF5A1F',
+        bgGlow: 'bg-[#FF5A1F]/30',
+        image: '/images/dish-jollof-chicken.webp',
+      },
+      {
+        id: 'smash-burger',
+        dish: PRODUCTS.find((p) => p.id === 'smash-burger') || PRODUCTS[0],
+        tag: 'Best Seller · 18% Off',
+        tagIcon: Star,
+        title: 'Double Prime Chuck Smash Burger',
+        desc: 'Two patties, melted Wisconsin cheddar & house smoked relish.',
+        accentColor: '#F5A623',
+        bgGlow: 'bg-[#F5A623]/25',
+        image: '/images/dish-smash-burger.webp',
+      },
+      {
+        id: 'margherita',
+        dish: PRODUCTS.find((p) => p.id === 'margherita') || PRODUCTS[3],
+        tag: 'Wood-Fired Hearth',
+        tagIcon: Sparkles,
+        title: '12" Blistered Wood-Fired Margherita',
+        desc: 'San Marzano tomato, buffalo mozzarella & fresh basil.',
+        accentColor: '#E64A12',
+        bgGlow: 'bg-[#E64A12]/30',
+        image: '/images/dish-margherita.webp',
+      },
+    ];
   }, []);
 
-  // Category Chips (Ergonomic 48x48px to 56x56px discs with clear labels)
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isCarouselPaused, setIsCarouselPaused] = useState(false);
+  const currentHero = heroSlides[activeSlide];
+
+  // Auto-slide every 5s unless hovered/touched
+  useEffect(() => {
+    if (isCarouselPaused) return;
+    const interval = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [isCarouselPaused, heroSlides.length]);
+
+  // Touch swipe support for hero carousel
+  const touchStartXRef = useRef(0);
+  const touchEndXRef = useRef(0);
+
+  const handleTouchStart = (e) => {
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+  const handleTouchMove = (e) => {
+    touchEndXRef.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = () => {
+    const diff = touchStartXRef.current - touchEndXRef.current;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        // Swiped left
+        setActiveSlide((prev) => (prev + 1) % heroSlides.length);
+      } else {
+        // Swiped right
+        setActiveSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+      }
+    }
+  };
+
+  // Plate entrance spin when active slide changes
+  useEffect(() => {
+    const plate = heroPlateRef.current;
+    if (plate) {
+      gsap.fromTo(
+        plate,
+        { scale: 0.75, rotation: -18, opacity: 0.5 },
+        { scale: 1, rotation: 0, opacity: 1, duration: 0.45, ease: 'back.out(1.5)' }
+      );
+    }
+  }, [activeSlide]);
+
+  // Category Chips (Ergonomic 48x48px discs with clear labels)
   const categoryChips = useMemo(() => {
     return [
       { id: 'all', label: 'All', image: '/images/hero-plate-delicacy.jpg' },
@@ -72,6 +168,11 @@ export default function DashboardPage() {
       { id: 'desserts', label: 'Desserts', image: '/images/dish-lava-cake.webp' },
     ];
   }, []);
+
+  // Seamless dynamic looping categories
+  const marqueeCategoryChips = useMemo(() => {
+    return [...categoryChips, ...categoryChips];
+  }, [categoryChips]);
 
   // Filter Pills
   const filterPills = [
@@ -574,9 +675,12 @@ export default function DashboardPage() {
         </header>
 
         {/* =========================================================
-            1.2 INTERACTIVE FILTER PILL HORIZONTAL RAIL
+            1.2 INTERACTIVE FILTER PILL HORIZONTAL RAIL (Zero Ruler)
             ========================================================= */}
-        <div className="mt-1.5 -mx-3 px-3 overflow-x-auto no-scrollbar py-0.5">
+        <div
+          className="mt-1.5 -mx-3 px-3 overflow-x-auto no-scrollbar py-0.5 select-none"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
           <div className="flex items-center gap-2 w-max pr-4">
             {filterPills.map((pill) => {
               const isActive = activeFilter === pill.id;
@@ -605,41 +709,51 @@ export default function DashboardPage() {
         </div>
 
         {/* =========================================================
-            1.3 THE HERO SHOWCASE BANNER (Contrast Inversion Dark Card)
+            1.3 THE HERO SHOWCASE BANNER CAROUSEL (4 Swipeable Cards)
             ========================================================= */}
         <section
           ref={heroBannerRef}
-          className="hero-showcase-card mt-3 relative rounded-[22px] bg-[#1E1E1E] text-white p-4 sm:p-5 overflow-hidden shadow-lg"
+          onMouseEnter={() => setIsCarouselPaused(true)}
+          onMouseLeave={() => setIsCarouselPaused(false)}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          className="hero-showcase-card mt-3 relative rounded-[22px] bg-[#1E1E1E] text-white p-4 sm:p-5 overflow-hidden shadow-lg select-none group"
           style={{ transformStyle: 'preserve-3d' }}
         >
           {/* Subtle Ambient Accent Glow */}
-          <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-[#F5A623]/20 blur-2xl pointer-events-none" />
+          <div
+            className={`absolute -right-8 -top-8 w-44 h-44 rounded-full ${currentHero.bgGlow} blur-2xl pointer-events-none transition-colors duration-500`}
+          />
 
           <div className="relative z-10 grid grid-cols-12 items-center gap-3">
             {/* Left Content */}
             <div className="col-span-7 sm:col-span-8 space-y-1">
-              <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-[#F5A623] bg-white/10 px-2 py-0.5 rounded-full">
-                <Sparkles size={10} />
-                <span>Free Delivery</span>
+              <span
+                className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/10"
+                style={{ color: currentHero.accentColor }}
+              >
+                <currentHero.tagIcon size={10} />
+                <span>{currentHero.tag}</span>
               </span>
 
-              <h2 className="text-base sm:text-lg md:text-xl font-black tracking-tight leading-tight">
-                Free delivery for artisan spaghetti
+              <h2 className="text-base sm:text-lg md:text-xl font-black tracking-tight leading-tight transition-all duration-300">
+                {currentHero.title}
               </h2>
 
               <p className="text-[11px] text-[#8A8A8E] leading-relaxed line-clamp-1">
-                Wild tiger prawns, 48-hr stone broth & fresh garden basil.
+                {currentHero.desc}
               </p>
 
-              <div className="pt-1.5">
+              <div className="pt-1.5 flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={(e) => handleAddToCart(heroDish, e)}
+                  onClick={(e) => handleAddToCart(currentHero.dish, e)}
                   className="h-8 sm:h-9 px-4 rounded-full bg-[#F5A623] hover:bg-[#e69818] active:scale-95 text-[#1A1A1A] font-extrabold text-[11px] sm:text-xs shadow-md transition-all cursor-pointer flex items-center gap-1.5"
                 >
                   <span>Order now</span>
                   <span className="text-[10px] font-bold opacity-80">
-                    · {heroDish.formattedPrice}
+                    · {currentHero.dish.formattedPrice}
                   </span>
                 </button>
               </div>
@@ -656,63 +770,116 @@ export default function DashboardPage() {
                 }}
               >
                 <img
-                  src={heroDish.image}
-                  alt={heroDish.name}
+                  src={currentHero.image}
+                  alt={currentHero.title}
                   className="w-full h-full object-cover"
                 />
               </div>
             </div>
           </div>
+
+          {/* Swipeable Carousel Controls & Pagination Dots */}
+          <div className="relative z-10 flex items-center justify-between mt-3 pt-2 border-t border-white/10">
+            {/* Pagination Indicator Dots */}
+            <div className="flex items-center gap-1.5">
+              {heroSlides.map((slide, idx) => {
+                const isActive = activeSlide === idx;
+                return (
+                  <button
+                    key={slide.id}
+                    type="button"
+                    onClick={() => setActiveSlide(idx)}
+                    aria-label={`Go to slide ${idx + 1}: ${slide.title}`}
+                    className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                      isActive
+                        ? 'w-6 bg-[#F5A623]'
+                        : 'w-1.5 bg-white/30 hover:bg-white/60'
+                    }`}
+                  />
+                );
+              })}
+            </div>
+
+            {/* Previous / Next Arrow Chevrons */}
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() =>
+                  setActiveSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)
+                }
+                aria-label="Previous card"
+                className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white text-xs cursor-pointer transition-all"
+              >
+                <ChevronLeft size={13} />
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setActiveSlide((prev) => (prev + 1) % heroSlides.length)
+                }
+                aria-label="Next card"
+                className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white text-xs cursor-pointer transition-all"
+              >
+                <ChevronRight size={13} />
+              </button>
+            </div>
+          </div>
         </section>
 
         {/* =========================================================
-            1.4 CATEGORY ICON NAVIGATION BAR
+            1.4 CATEGORY ICON NAVIGATION BAR (Infinite Smooth Marquee)
             ========================================================= */}
-        <div className="mt-4">
+        <div className="mt-3.5 overflow-hidden select-none">
           <div className="flex items-center justify-between mb-2 px-1">
             <h3 className="text-xs font-black uppercase tracking-wider text-[#1A1A1A]">
               Categories
             </h3>
             <span className="text-[10px] font-bold text-[#8A8A8E]">
-              {categoryChips.length} cuisines
+              Tap to filter · {categoryChips.length} cuisines
             </span>
           </div>
 
-          <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-0.5 -mx-3 px-3">
-            {categoryChips.map((cat) => {
-              const isSelected = selectedCategory === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className={`category-pill flex flex-col items-center gap-1 shrink-0 transition-transform active:scale-95 cursor-pointer min-w-[50px]`}
-                >
-                  {/* Circular Disc with High-Res Image (48x48px to 52x52px) */}
-                  <div
-                    className={`w-12 h-12 rounded-full overflow-hidden p-0.5 flex items-center justify-center transition-all ${
-                      isSelected
-                        ? 'bg-[#1A1A1A] ring-2 ring-[#F5A623] shadow-md scale-105'
-                        : 'bg-white border border-black/5 hover:border-black/20 shadow-2xs'
-                    }`}
+          {/* Smooth dynamic auto-scrolling rail - Zero scrollbar, zero rectangle */}
+          <div
+            className="overflow-x-hidden no-scrollbar py-1"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            <div className="animate-category-marquee flex items-center gap-3">
+              {marqueeCategoryChips.map((cat, idx) => {
+                const isSelected = selectedCategory === cat.id;
+                return (
+                  <button
+                    key={`${cat.id}-${idx}`}
+                    type="button"
+                    onClick={() => setSelectedCategory(cat.id)}
+                    className="category-pill flex flex-col items-center gap-1 shrink-0 transition-transform active:scale-95 cursor-pointer min-w-[52px]"
                   >
-                    <img
-                      src={cat.image}
-                      alt={cat.label}
-                      className="w-full h-full object-cover rounded-full"
-                    />
-                  </div>
-                  {/* Title-case Label */}
-                  <span
-                    className={`text-[10px] font-bold tracking-tight text-center truncate max-w-[56px] ${
-                      isSelected ? 'text-[#1A1A1A] font-black' : 'text-[#6E6D7A]'
-                    }`}
-                  >
-                    {cat.label}
-                  </span>
-                </button>
-              );
-            })}
+                    {/* Circular Disc with High-Res Image (48x48px) */}
+                    <div
+                      className={`w-12 h-12 rounded-full overflow-hidden p-0.5 flex items-center justify-center transition-all ${
+                        isSelected
+                          ? 'bg-[#1A1A1A] ring-2 ring-[#F5A623] shadow-md scale-105'
+                          : 'bg-white border border-black/5 hover:border-black/20 shadow-2xs'
+                      }`}
+                    >
+                      <img
+                        src={cat.image}
+                        alt={cat.label}
+                        className="w-full h-full object-cover rounded-full pointer-events-none"
+                      />
+                    </div>
+                    {/* Title-case Label */}
+                    <span
+                      className={`text-[10px] font-bold tracking-tight text-center truncate max-w-[56px] ${
+                        isSelected ? 'text-[#1A1A1A] font-black' : 'text-[#6E6D7A]'
+                      }`}
+                    >
+                      {cat.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -787,10 +954,10 @@ export default function DashboardPage() {
                 <div
                   key={product.id}
                   onClick={() => setSelectedProduct(product)}
-                  className="product-card group relative bg-white rounded-2xl p-3 flex items-center gap-3 border border-black/5 hover:border-black/15 shadow-2xs hover:shadow-md transition-all duration-200 cursor-pointer"
+                  className="product-card group relative bg-white rounded-2xl p-3 flex items-center gap-3.5 border border-black/5 hover:border-black/15 shadow-2xs hover:shadow-md transition-all duration-200 cursor-pointer"
                 >
-                  {/* Left Surface: Rounded Thumbnail Holder (64x64px or 70x70px) */}
-                  <div className="w-16 h-16 sm:w-[70px] sm:h-[70px] rounded-xl overflow-hidden bg-[#F6F4EE] shrink-0 relative">
+                  {/* Left Surface: Rounded Thumbnail Holder */}
+                  <div className="w-16 h-16 sm:w-[68px] sm:h-[68px] rounded-xl overflow-hidden bg-[#F6F4EE] shrink-0 relative">
                     <img
                       src={product.image}
                       alt={product.name}
@@ -799,50 +966,39 @@ export default function DashboardPage() {
                     />
                   </div>
 
-                  {/* Middle Content Block */}
-                  <div className="flex-1 min-w-0 pr-8">
+                  {/* Middle Content Block (Clean, uncrowded, no description) */}
+                  <div className="flex-1 min-w-0 pr-10">
                     <h4 className="text-xs sm:text-sm font-extrabold text-[#1A1A1A] tracking-tight leading-snug truncate">
                       {product.name}
                     </h4>
 
-                    {/* Metadata Subtitle (WCAG AA compliant #6E6D7A) */}
-                    <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold text-[#6E6D7A] mt-0.5">
+                    {/* Metadata Subtitle: Prep Time + Tabular Price */}
+                    <div className="flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#6E6D7A] mt-1.5">
                       <span className="flex items-center gap-1">
                         <Clock size={11} className="text-[#8A8A8E]" />
                         <span>~ {product.prepTime || '20 min'}</span>
                       </span>
-                      <span>|</span>
+                      <span>·</span>
                       <span className="font-extrabold text-[#1A1A1A] tabular-nums">
                         {product.formattedPrice}
                       </span>
                     </div>
-
-                    <p className="text-[10px] text-[#8A8A8E] truncate mt-0.5">
-                      {product.desc}
-                    </p>
                   </div>
 
-                  {/* Top-Right Metadata: Rating Pill */}
-                  <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={(e) => toggleFavorite(product.id, e)}
-                      aria-label="Add to favorites"
-                      className="text-neutral-400 hover:text-red-500 transition-colors p-0.5 cursor-pointer"
-                    >
-                      <Heart
-                        size={14}
-                        className={
-                          isFav ? 'text-red-500 fill-red-500' : 'text-neutral-300'
-                        }
-                      />
-                    </button>
-
-                    <div className="flex items-center gap-0.5 bg-[#F6F4EE] px-1.5 py-0.5 rounded-full text-[9px] font-black text-[#1A1A1A]">
-                      <Star size={10} className="text-[#F5A623] fill-[#F5A623]" />
-                      <span>4.8</span>
-                    </div>
-                  </div>
+                  {/* Top-Right Action: Clean Favorite Heart Button (No rating pill) */}
+                  <button
+                    type="button"
+                    onClick={(e) => toggleFavorite(product.id, e)}
+                    aria-label="Add to favorites"
+                    className="absolute top-3 right-3 text-neutral-400 hover:text-red-500 transition-colors p-1 cursor-pointer"
+                  >
+                    <Heart
+                      size={15}
+                      className={
+                        isFav ? 'text-red-500 fill-red-500' : 'text-neutral-300'
+                      }
+                    />
+                  </button>
 
                   {/* Bottom-Right Action: Circular Dark (+) Button (36x36px) */}
                   <button
